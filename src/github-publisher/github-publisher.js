@@ -21,8 +21,12 @@ export class GitHubPublisher {
     this.repoName = repoName;
     this.websiteDir = path.join(__dirname, '../../website');
 
-    // GitHub Pages URL
-    this.baseUrl = `https://${githubUsername}.github.io/${repoName}`;
+    // GitHub Pages URL - for .github.io repo, no repo name in URL
+    if (repoName === '.github.io' || repoName === `${githubUsername}.github.io`) {
+      this.baseUrl = `https://${githubUsername}.github.io`;
+    } else {
+      this.baseUrl = `https://${githubUsername}.github.io/${repoName}`;
+    }
   }
 
   /**

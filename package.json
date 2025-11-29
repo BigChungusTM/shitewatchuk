@@ -7,7 +7,7 @@
   "scripts": {
     "start": "node src/index.js",
     "dev": "node --watch src/index.js",
-    "test": "node src/test-scheduler.js"
+    "test": "node src/test-publisher.js"
   },
   "keywords": [
     "cso",

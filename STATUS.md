@@ -31,10 +31,10 @@
 ## 🚧 Still Needed
 
 ### Core Integration
-- [ ] Main index.js (wire everything together)
-- [ ] Copy monitoring code from ../src to production/src/monitor
-- [ ] Copy Twitter poster from ../src/social
-- [ ] Update imports/paths
+- [x] Main index.js (wire everything together)
+- [x] Copy monitoring code from ../src to production/src/monitor
+- [x] Copy Twitter poster from ../src/social
+- [ ] Test full system end-to-end
 
 ### Optional Enhancements
 - [ ] Error logging to file
@@ -55,9 +55,14 @@ production/
 │   │   └── ai-summarizer.js        ✅ AI summaries
 │   ├── github-publisher/
 │   │   └── github-publisher.js     ✅ Git operations
-│   ├── monitor/                    ❌ NEEDS: EA API monitoring
-│   ├── social/                     ❌ NEEDS: Twitter poster
-│   └── test-publisher.js           ✅ Test script
+│   ├── monitor/
+│   │   └── event-tracker.js         ✅ EA API monitoring
+│   ├── social/
+│   │   ├── twitter-poster.js        ✅ Twitter integration
+│   │   ├── post-generator.js        ✅ Tweet generator
+│   │   └── twitter-selector.js      ✅ Post selection logic
+│   ├── test-publisher.js            ✅ Test script
+│   └── index.js                     ✅ Main entry point
 │
 ├── website/                        ✅ Ready for GitHub Pages
 │   ├── index.html                  ✅ Landing page
