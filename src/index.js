@@ -26,7 +26,7 @@ console.log(`   GitHub: ${process.env.GITHUB_USERNAME}/${process.env.GITHUB_REPO
 console.log(`   Twitter: ${process.env.TWITTER_API_KEY ? 'Configured' : 'Not configured'}`);
 console.log('');
 console.log('🎯 Settings:');
-console.log('   Monitoring interval: 5 minutes');
+console.log('   Monitoring interval: 1 minute');
 console.log('   Posting interval: 90 minutes');
 console.log('   Duration filter: ALL events (no minimum)');
 console.log('   Daily posts: 16 maximum');
@@ -70,19 +70,19 @@ async function main() {
     // Initial check
     await eventTracker.checkAPI();
 
-    // Set up 5-minute monitoring interval
+    // Set up 1-minute monitoring interval
     setInterval(async () => {
       try {
         await eventTracker.checkAPI();
       } catch (error) {
         console.error('❌ Error in monitoring loop:', error.message);
       }
-    }, 5 * 60 * 1000); // 5 minutes
+    }, 60 * 1000); // 1 minute
 
     console.log('✅ System running!');
     console.log('');
     console.log('📊 Monitoring:');
-    console.log('   - Checking water company APIs every 5 minutes');
+    console.log('   - Checking water company APIs every 1 minute');
     console.log('   - Tracking ALL completed discharge events');
     console.log('   - Posting to Twitter every 90 minutes');
     console.log('   - Publishing to GitHub Pages automatically');

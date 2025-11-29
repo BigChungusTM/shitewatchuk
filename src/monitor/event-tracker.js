@@ -421,10 +421,18 @@ export class EventTracker {
    * Main entry point - check all water company APIs for active events
    */
   async checkAPI() {
-    console.log('🔍 Checking water company APIs...');
+    const timestamp = new Date().toLocaleTimeString('en-GB');
+    console.log(`\n🔍 [${timestamp}] Checking water company APIs...`);
+
+    const previousActiveCount = this.activeEvents.size;
+    const previousQueueCount = this.eventQueue.getPostableEvents().length;
 
     let totalEvents = 0;
-    let queuedEvents = 0;
+    let newEventsStarted = 0;
+    let eventsEnded = 0;
+
+    // Track current event IDs from API
+    const currentEventIds = new Set();
 
     // Check each water company
     for (const [key, company] of Object.entries(WATER_COMPANIES)) {
@@ -432,22 +440,45 @@ export class EventTracker {
         const result = await this.apiClient.getAllOverflows(company.endpoint, company.layerId);
 
         if (result.features && result.features.length > 0) {
-          // Count ALL features as active events (API returns current discharges)
-          const featureCount = result.features.length;
-          totalEvents += featureCount;
-          console.log(`  ✓ ${company.name}: ${featureCount} features returned`);
-
+          totalEvents += result.features.length;
           await this.processFeatures(company.name, result.features);
+
+          // Track which events are currently active
+          for (const feature of result.features) {
+            const eventId = this.generateEventId(feature, company.name);
+            currentEventIds.add(eventId);
+          }
         }
       } catch (error) {
         console.error(`  ❌ ${company.name} error:`, error.message);
       }
     }
 
+    // Detect ended events (in activeEvents but not in current API response)
+    for (const eventId of this.activeEvents.keys()) {
+      if (!currentEventIds.has(eventId)) {
+        eventsEnded++;
+      }
+    }
+
+    // Detect new events
+    newEventsStarted = this.activeEvents.size - previousActiveCount + eventsEnded;
+
     const activeCount = this.activeEvents.size;
     const queueCount = this.eventQueue.getPostableEvents().length;
-    console.log(`\n📊 Total active events (currently discharging): ${activeCount}`);
-    console.log(`📥 Events in queue (completed, ready to post): ${queueCount}`);
+
+    // Summary
+    console.log(`📊 Active: ${activeCount} | Queue: ${queueCount}`);
+
+    if (newEventsStarted > 0) {
+      console.log(`   🆕 ${newEventsStarted} new event(s) started`);
+    }
+    if (eventsEnded > 0) {
+      console.log(`   ✅ ${eventsEnded} event(s) ended`);
+    }
+    if (queueCount > previousQueueCount) {
+      console.log(`   📥 ${queueCount - previousQueueCount} event(s) added to queue`);
+    }
   }
 
   /**
