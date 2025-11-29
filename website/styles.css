@@ -30,23 +30,36 @@ header h1 {
 .tagline {
   font-size: 1.1rem;
   opacity: 0.9;
+  margin-bottom: 1.5rem;
 }
 
-nav {
-  margin-top: 1rem;
+/* Navigation Tabs */
+.nav-tabs {
+  display: flex;
+  justify-content: center;
+  gap: 0;
+  margin-top: 1.5rem;
+  border-bottom: 2px solid rgba(255,255,255,0.1);
 }
 
-nav a {
+.nav-tab {
   color: white;
   text-decoration: none;
-  padding: 0.5rem 1rem;
-  background: rgba(255,255,255,0.1);
-  border-radius: 4px;
-  transition: background 0.3s;
+  padding: 0.75rem 2rem;
+  background: transparent;
+  border-bottom: 3px solid transparent;
+  transition: all 0.3s;
+  font-weight: 500;
 }
 
-nav a:hover {
-  background: rgba(255,255,255,0.2);
+.nav-tab:hover {
+  background: rgba(255,255,255,0.1);
+  border-bottom-color: rgba(255,255,255,0.5);
+}
+
+.nav-tab.active {
+  border-bottom-color: #e74c3c;
+  background: rgba(255,255,255,0.05);
 }
 
 /* Main Content */

@@ -9,6 +9,7 @@ import { EventDatabase } from '../database/db.js';
 import { PostGenerator } from '../social/post-generator.js';
 import { TwitterPoster } from '../social/twitter-poster.js';
 import { TwitterSelector } from '../social/twitter-selector.js';
+import { WATER_COMPANIES } from '../../config.js';
 import fs from 'fs';
 import path from 'path';
 import { fileURLToPath } from 'url';
@@ -17,14 +18,13 @@ const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
 
 export class EventTracker {
-  constructor() {
+  constructor(eventQueue, twitterPoster) {
     this.apiClient = new ArcGISClient();
     this.db = new EventDatabase();
     this.activeEvents = new Map(); // In-memory cache of active events
     this.siteMapping = this.loadSiteMapping(); // Load historical site mapping
-    this.postGenerator = new PostGenerator(); // Social media post generator
-    this.twitterPoster = new TwitterPoster(); // Twitter API poster
-    this.twitterSelector = new TwitterSelector(); // Decides what to post (5 days threshold)
+    this.eventQueue = eventQueue; // Queue for 10+ hour events
+    this.twitterPoster = twitterPoster; // Passed in from main
     this.configPath = path.join(__dirname, '../../config/autonomous-posting.json');
   }
 
@@ -363,31 +363,14 @@ export class EventTracker {
 
     console.log('='.repeat(70) + '\n');
 
-    // Check if we should post to Twitter (only 5+ day events)
-    const decision = this.twitterSelector.shouldPost(event);
+    // Add to event queue if it meets the 10+ hour threshold
+    const added = this.eventQueue.addEvent(event);
 
-    if (decision.shouldPost) {
-      const autonomousEnabled = this.isAutonomousPostingEnabled();
-
-      if (autonomousEnabled) {
-        console.log(`🚨 SEVERE EVENT - POSTING TO TWITTER (AUTONOMOUS MODE)`);
-        console.log(`   ${decision.reason}`);
-        console.log(`   Posting as event ends (real-time)`);
-
-        // Generate post and tweet it
-        this.postToTwitter(event, historicalData);
-      } else {
-        console.log(`🚨 SEVERE EVENT DETECTED (${decision.reason})`);
-        console.log(`   ⚠️  Autonomous posting DISABLED`);
-        console.log(`   📝 Post generated and saved to generated_posts/`);
-        console.log(`   💡 Enable autonomous posting in dashboard or post manually`);
-
-        // Generate post but don't tweet it
-        this.postGenerator.generatePost(event, historicalData);
-      }
+    if (added) {
+      console.log(`✅ Event added to queue (10+ hours)`);
+      console.log(`   Will be included in next 90-minute cycle post`);
     } else {
-      console.log(`ℹ️  Not posting to Twitter: ${decision.reason}`);
-      console.log(`   (Still logged to GitHub Pages/database)`);
+      console.log(`ℹ️  Event not added to queue (< 10 hours or already posted)`);
     }
   }
 
@@ -432,6 +415,39 @@ export class EventTracker {
     } catch (error) {
       console.error(`Error posting to Twitter: ${error.message}`);
     }
+  }
+
+  /**
+   * Main entry point - check all water company APIs for active events
+   */
+  async checkAPI() {
+    console.log('🔍 Checking water company APIs...');
+
+    let totalEvents = 0;
+    let queuedEvents = 0;
+
+    // Check each water company
+    for (const [key, company] of Object.entries(WATER_COMPANIES)) {
+      try {
+        const result = await this.apiClient.getAllOverflows(company.endpoint, company.layerId);
+
+        if (result.features && result.features.length > 0) {
+          const activeCount = result.features.filter(f =>
+            f.attributes && (f.attributes.Status === 'Discharging' || f.attributes.AlertStatus === 'Active')
+          ).length;
+
+          totalEvents += activeCount;
+          console.log(`  ✓ ${company.name}: ${activeCount} active events`);
+
+          await this.processFeatures(company.name, result.features);
+        }
+      } catch (error) {
+        console.error(`  ❌ ${company.name} error:`, error.message);
+      }
+    }
+
+    console.log(`\n📊 Total active events: ${totalEvents}`);
+    console.log(`📥 Events in queue (10+ hours): ${this.eventQueue.getPostableEvents().length}`);
   }
 
   /**

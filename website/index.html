@@ -10,58 +10,16 @@
   <header>
     <h1>💩 ShitWatch UK</h1>
     <p class="tagline">Real-time monitoring of UK sewage discharges</p>
+
+    <!-- Navigation Tabs -->
+    <nav class="nav-tabs">
+      <a href="index.html" class="nav-tab active">Home</a>
+      <a href="feed.html" class="nav-tab">Live Feed</a>
+      <a href="faq.html" class="nav-tab">FAQ</a>
+    </nav>
   </header>
 
   <main>
-    <!-- About Section -->
-    <section class="about">
-      <h2>About This Project</h2>
-      <p>
-        ShitWatch UK monitors real-time storm overflow events across England using data from
-        the <strong>Environment Agency's Event Duration Monitoring (EDM) API</strong>. We track
-        sewage discharges that last <strong>10+ hours</strong> and publish detailed information
-        every 90 minutes.
-      </p>
-
-      <h3>Data Sources</h3>
-      <ul class="data-sources">
-        <li>
-          <strong>Environment Agency Real-Time API:</strong>
-          <a href="https://environment.data.gov.uk/portalstg/home/item.html?id=f286440b8cb24a079c2f7257bbc3e8c3" target="_blank">
-            Storm Overflow Event Data
-          </a>
-        </li>
-        <li>
-          <strong>Historical Flow Rates:</strong> Permit database analysis for volume estimates
-        </li>
-        <li>
-          <strong>Site Locations:</strong> GPS coordinates from EA discharge consents
-        </li>
-      </ul>
-
-      <h3>How It Works</h3>
-      <ol class="how-it-works">
-        <li><strong>Continuous Monitoring:</strong> We check the EA API every 5 minutes for ongoing discharge events</li>
-        <li><strong>Duration Tracking:</strong> Events are tracked from start to finish, with duration calculated in real-time</li>
-        <li><strong>10+ Hour Threshold:</strong> Only significant events (10+ hours) are published</li>
-        <li><strong>90-Minute Cycles:</strong> Every 90 minutes, we publish the latest data and post to Twitter</li>
-        <li><strong>AI Summaries:</strong> Each cycle includes an AI-generated summary explaining what the data means</li>
-      </ol>
-
-      <h3>What You'll Find Here</h3>
-      <p>
-        Each 90-minute cycle shows detailed information about sewage discharge events:
-      </p>
-      <ul>
-        <li>Water company responsible</li>
-        <li>Discharge site ID and location (GPS coordinates)</li>
-        <li>Receiving watercourse (river, stream, etc.)</li>
-        <li>Start time, end time, and total duration</li>
-        <li>Google Maps links to see exact locations</li>
-        <li>AI-generated summary of impacts and context</li>
-      </ul>
-    </section>
-
     <!-- Top 5 Current Events -->
     <section class="top-events">
       <h2>🔥 Top 5 Longest Current Events</h2>
@@ -70,21 +28,14 @@
       </div>
     </section>
 
-    <!-- Latest Feed -->
-    <section class="latest-feed">
-      <h2>📊 Latest Data</h2>
-      <p>View the most recent 90-minute cycle:</p>
-      <a href="feed.html" class="cta-button">View Live Feed →</a>
-    </section>
-
-    <!-- Links -->
-    <section class="links">
-      <h2>Additional Resources</h2>
+    <!-- Quick Links -->
+    <section class="quick-links">
+      <h2>Resources</h2>
       <ul>
-        <li><a href="https://www.theriverstrust.org/" target="_blank">The Rivers Trust</a> - River protection charity</li>
-        <li><a href="https://www.sas.org.uk/" target="_blank">Surfers Against Sewage</a> - Campaign against sewage pollution</li>
-        <li><a href="https://www.gov.uk/government/organisations/environment-agency" target="_blank">Environment Agency</a> - Government regulator</li>
-        <li><a href="https://github.com/yourusername/shitwatch-uk" target="_blank">GitHub Repository</a> - Source code and methodology</li>
+        <li><a href="https://www.theriverstrust.org/" target="_blank">The Rivers Trust</a></li>
+        <li><a href="https://www.sas.org.uk/" target="_blank">Surfers Against Sewage</a></li>
+        <li><a href="https://environment.data.gov.uk/" target="_blank">Environment Agency Data</a></li>
+        <li><a href="https://github.com/bigchungustm/shitewatchuk" target="_blank">Source Code (GitHub)</a></li>
       </ul>
     </section>
   </main>
@@ -95,8 +46,7 @@
       <a href="https://twitter.com/yourhandle" target="_blank">Follow on Twitter</a>
     </p>
     <p class="disclaimer">
-      This is an independent monitoring project. We provide factual data from official sources.
-      All data is verified against the Environment Agency's real-time API.
+      Independent monitoring project providing factual data from official sources.
     </p>
   </footer>
 
