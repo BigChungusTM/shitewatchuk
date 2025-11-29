@@ -432,12 +432,10 @@ export class EventTracker {
         const result = await this.apiClient.getAllOverflows(company.endpoint, company.layerId);
 
         if (result.features && result.features.length > 0) {
-          const activeCount = result.features.filter(f =>
-            f.attributes && (f.attributes.Status === 'Discharging' || f.attributes.AlertStatus === 'Active')
-          ).length;
-
-          totalEvents += activeCount;
-          console.log(`  ✓ ${company.name}: ${activeCount} active events`);
+          // Count ALL features as active events (API returns current discharges)
+          const featureCount = result.features.length;
+          totalEvents += featureCount;
+          console.log(`  ✓ ${company.name}: ${featureCount} features returned`);
 
           await this.processFeatures(company.name, result.features);
         }
@@ -446,9 +444,10 @@ export class EventTracker {
       }
     }
 
+    const activeCount = this.activeEvents.size;
     const queueCount = this.eventQueue.getPostableEvents().length;
-    console.log(`\n📊 Total active events: ${totalEvents}`);
-    console.log(`📥 Events in queue (all durations): ${queueCount}`);
+    console.log(`\n📊 Total active events (currently discharging): ${activeCount}`);
+    console.log(`📥 Events in queue (completed, ready to post): ${queueCount}`);
   }
 
   /**
