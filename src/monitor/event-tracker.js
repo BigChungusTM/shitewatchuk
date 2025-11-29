@@ -146,6 +146,15 @@ export class EventTracker {
   }
 
   /**
+   * Generate event ID from feature
+   */
+  generateEventId(feature, waterCompany) {
+    const parsed = this.parseFeature(feature, waterCompany);
+    const companyKey = waterCompany.toLowerCase().replace(/\s+/g, '_');
+    return `${companyKey}:${parsed.siteId}`;
+  }
+
+  /**
    * Process features from API response and update event tracking
    */
   async processFeatures(waterCompany, features) {
