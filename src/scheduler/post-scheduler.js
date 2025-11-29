@@ -103,13 +103,13 @@ export class PostScheduler {
       const events = this.eventQueue.getPostableEvents();
 
       if (events.length === 0) {
-        console.log('📭 No postable events in queue (10+ hours)');
+        console.log('📭 No events in queue');
         console.log(`🕐 Next cycle: ${this.getNextPostTime()}`);
         console.log('='.repeat(70));
         return;
       }
 
-      console.log(`📦 Events in queue: ${events.length}`);
+      console.log(`📦 Events in queue: ${events.length} (sorted by duration)`);
 
       // Generate GitHub Pages data for this cycle
       console.log('\\n📊 Generating GitHub Pages data...');
@@ -134,12 +134,9 @@ export class PostScheduler {
 
       console.log(`✓ Published to GitHub`);
 
-      // Pick the most recent event to tweet about
-      const eventToPost = events[0]; // Already sorted by end time (newest first)
-
-      // Generate tweet
+      // Generate tweet highlighting worst offenders
       console.log('\\n🐦 Posting to Twitter...');
-      const tweetText = this.generateTweet(eventToPost, cycleData.url);
+      const tweetText = this.generateTweet(events, cycleData.url, cycleData.data.eventCount);
 
       console.log('Tweet preview:');
       console.log('-'.repeat(70));
@@ -158,8 +155,11 @@ export class PostScheduler {
           console.log(`   URL: ${result.url}`);
           console.log(`   Posts today: ${this.postsToday}/${this.maxPostsPerDay}`);
 
-          // Mark event as posted
-          this.eventQueue.markAsPosted(eventToPost.id);
+          // Mark ALL events in this cycle as posted
+          for (const event of events) {
+            this.eventQueue.markAsPosted(event.id);
+          }
+          console.log(`   Marked ${events.length} events as posted`);
         } else {
           console.error(`❌ Twitter post failed: ${result.error}`);
         }
@@ -177,27 +177,28 @@ export class PostScheduler {
   }
 
   /**
-   * Generate tweet text with GitHub Pages link
+   * Generate tweet highlighting worst offenders
    */
-  generateTweet(event, githubUrl) {
-    const duration = this.formatDuration(event.durationMinutes);
-    const company = event.waterCompany;
-    const watercourse = event.receivingWatercourse;
+  generateTweet(events, githubUrl, eventCount) {
+    // Get worst offender (longest duration - already sorted)
+    const worstEvent = events[0];
+    const duration = this.formatDuration(worstEvent.durationMinutes);
 
-    // Shorten company names for space
-    const shortCompany = company
+    // Shorten company name
+    const shortCompany = worstEvent.waterCompany
       .replace(' Water', '')
       .replace(' Utilities', '');
 
     const hashtags = this.selectHashtags();
-    const grokQuestion = this.selectGrokQuestion(event);
 
-    // Format: Short, punchy, links to details
-    const tweet = `🚨 ${shortCompany} dumped sewage for ${duration} into ${watercourse}
+    // Format: Highlight worst offender, encourage clicking link
+    const tweet = `🚨 Latest sewage discharges (90-min cycle)
 
-📊 Full details: ${githubUrl}
+Worst offender: ${shortCompany}
+Duration: ${duration}
+${eventCount} total events tracked
 
-@grok ${grokQuestion}
+📊 See all data: ${githubUrl}
 
 ${hashtags}`;
 

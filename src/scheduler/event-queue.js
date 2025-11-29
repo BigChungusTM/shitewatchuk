@@ -1,32 +1,26 @@
 /**
  * Event Queue
  *
- * Manages queue of 10+ hour events ready to be posted
- * Sorted by end time (most recent first)
+ * Manages ALL completed discharge events ready to be posted
+ * Sorted by duration (longest first)
  */
 
 export class EventQueue {
   constructor() {
     this.events = new Map(); // id -> event object
     this.postedEvents = new Set(); // IDs of already-posted events
-    this.minDurationMinutes = 600; // 10 hours
   }
 
   /**
-   * Add event to queue if it meets criteria
+   * Add event to queue (ALL events, no duration threshold)
    */
   addEvent(event) {
-    // Check duration
-    if (event.durationMinutes < this.minDurationMinutes) {
-      return false;
-    }
-
     // Check if already posted
     if (this.postedEvents.has(event.id)) {
       return false;
     }
 
-    // Add to queue
+    // Add to queue (no duration filter - capture everything!)
     this.events.set(event.id, {
       ...event,
       addedToQueue: new Date().toISOString()
@@ -37,7 +31,7 @@ export class EventQueue {
   }
 
   /**
-   * Get all postable events (sorted by end time, newest first)
+   * Get all postable events (sorted by duration, longest first)
    */
   getPostableEvents() {
     const events = Array.from(this.events.values());
@@ -45,11 +39,16 @@ export class EventQueue {
     // Filter out already posted
     const unposted = events.filter(e => !this.postedEvents.has(e.id));
 
-    // Sort by end time (most recent first)
+    // Sort by duration (longest first), then by end time
     unposted.sort((a, b) => {
+      // Primary sort: duration (longest first)
+      if (a.durationMinutes !== b.durationMinutes) {
+        return b.durationMinutes - a.durationMinutes;
+      }
+      // Secondary sort: most recent first
       const timeA = new Date(a.endTime).getTime();
       const timeB = new Date(b.endTime).getTime();
-      return timeB - timeA; // Descending
+      return timeB - timeA;
     });
 
     return unposted;
@@ -74,7 +73,7 @@ export class EventQueue {
       total: all.length,
       unposted: unposted.length,
       posted: this.postedEvents.size,
-      threshold: `${this.minDurationMinutes / 60} hours`
+      threshold: 'ALL events (no minimum)'
     };
   }
 

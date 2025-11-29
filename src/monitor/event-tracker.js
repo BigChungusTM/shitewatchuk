@@ -363,14 +363,14 @@ export class EventTracker {
 
     console.log('='.repeat(70) + '\n');
 
-    // Add to event queue if it meets the 10+ hour threshold
+    // Add ALL completed events to queue
     const added = this.eventQueue.addEvent(event);
 
     if (added) {
-      console.log(`✅ Event added to queue (10+ hours)`);
+      console.log(`✅ Event added to queue`);
       console.log(`   Will be included in next 90-minute cycle post`);
     } else {
-      console.log(`ℹ️  Event not added to queue (< 10 hours or already posted)`);
+      console.log(`ℹ️  Event already posted in previous cycle`);
     }
   }
 
@@ -446,8 +446,9 @@ export class EventTracker {
       }
     }
 
+    const queueCount = this.eventQueue.getPostableEvents().length;
     console.log(`\n📊 Total active events: ${totalEvents}`);
-    console.log(`📥 Events in queue (10+ hours): ${this.eventQueue.getPostableEvents().length}`);
+    console.log(`📥 Events in queue (all durations): ${queueCount}`);
   }
 
   /**
