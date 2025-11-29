@@ -73,7 +73,8 @@ export class EventQueue {
       total: all.length,
       unposted: unposted.length,
       posted: this.postedEvents.size,
-      threshold: 'ALL events (no minimum)'
+      threshold: 'ALL events (no minimum)',
+      rawMapSize: this.events.size
     };
   }
 

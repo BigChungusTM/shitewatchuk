@@ -474,10 +474,11 @@ export class EventTracker {
     newEventsStarted = this.activeEvents.size - previousActiveCount + eventsEnded;
 
     const activeCount = this.activeEvents.size;
+    const queueStats = this.eventQueue.getStats();
     const queueCount = this.eventQueue.getPostableEvents().length;
 
     // Summary
-    console.log(`📊 Active: ${activeCount} | Queue: ${queueCount}`);
+    console.log(`📊 Active: ${activeCount} | Queue: ${queueCount} (${queueStats.rawMapSize} total in map, ${queueStats.posted} marked posted)`);
 
     if (newEventsStarted > 0) {
       console.log(`   🆕 ${newEventsStarted} new event(s) started`);

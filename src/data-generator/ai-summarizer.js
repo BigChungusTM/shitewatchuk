@@ -9,8 +9,8 @@ import fetch from 'node-fetch';
 
 export class AISummarizer {
   constructor() {
-    this.ollamaUrl = 'http://192.168.1.51:11434';
-    this.model = 'qwen3:4b';
+    this.ollamaUrl = process.env.OLLAMA_URL || 'http://192.168.1.51:11434';
+    this.model = process.env.OLLAMA_MODEL || 'qwen3-vl:235b-cloud';
   }
 
   /**
