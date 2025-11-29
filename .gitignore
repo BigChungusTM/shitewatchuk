@@ -1,0 +1,29 @@
+# Environment variables
+.env
+
+# Dependencies
+node_modules/
+
+# Generated data (don't commit - will be in separate repo)
+generated_posts/
+data/
+logs/
+
+# Config files with secrets
+config/twitter-stats.json
+config/autonomous-posting.json
+config/grok-engagement.json
+
+# GitHub Pages site (will be in separate repo)
+website/events/*.json
+website/cycles/*.json
+website/events/*.html
+website/cycles/*.html
+
+# OS files
+.DS_Store
+Thumbs.db
+
+# IDE
+.vscode/
+.idea/

@@ -1,0 +1,71 @@
+{
+  "twitter": {
+    "limits": {
+      "maxPostsPerMonth": 100,
+      "maxPostsPerDay": 3,
+      "reserveSundayForSummary": true
+    },
+    "severity": {
+      "minimumScore": 150,
+      "weights": {
+        "duration": {
+          "maxPoints": 100,
+          "pointsPerHour": 8.33
+        },
+        "volume": {
+          "maxPoints": 100,
+          "pointsPer10kLiters": 1
+        },
+        "location": {
+          "bathingWater": 100,
+          "majorRiver": 80,
+          "coastal": 60,
+          "anyRiver": 40,
+          "other": 20
+        },
+        "repeatOffender": {
+          "maxPoints": 50,
+          "over200Events": 50,
+          "over100Events": 30,
+          "over50Events": 15
+        },
+        "notoriousCompanies": {
+          "bonus": 25,
+          "companies": [
+            "Thames Water",
+            "Southern Water",
+            "South West Water"
+          ]
+        }
+      }
+    },
+    "postingTimes": {
+      "morning": "09:00",
+      "afternoon": "14:00",
+      "evening": "19:00",
+      "sundaySummary": "10:00"
+    },
+    "format": {
+      "maxLength": 280,
+      "includeGitHubLink": true,
+      "includeMapLink": true,
+      "maxHashtags": 3
+    }
+  },
+  "github": {
+    "enabled": true,
+    "repository": "shitwatch-uk",
+    "updateFrequency": "hourly",
+    "features": {
+      "liveMap": true,
+      "historicalData": true,
+      "csvExport": true,
+      "companyRankings": true
+    }
+  },
+  "events": {
+    "minimumDuration": 240,
+    "ignoreUnder": 15,
+    "volumeCalculation": true
+  }
+}

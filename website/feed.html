@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Live Feed - ShitWatch UK</title>
+  <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+  <header>
+    <h1>💩 ShitWatch UK</h1>
+    <p class="tagline">Live Discharge Feed</p>
+    <nav>
+      <a href="index.html">← Back to Home</a>
+    </nav>
+  </header>
+
+  <main>
+    <!-- Latest Cycle (90 minutes) -->
+    <section class="latest-cycle">
+      <h2>🕐 Latest 90-Minute Cycle</h2>
+      <div id="latest-cycle-container">
+        <p class="loading">Loading latest data...</p>
+      </div>
+    </section>
+
+    <!-- Previous Cycles -->
+    <section class="previous-cycles">
+      <h2>📋 Previous Cycles</h2>
+      <div id="previous-cycles-container">
+        <p class="loading">Loading previous cycles...</p>
+      </div>
+    </section>
+  </main>
+
+  <footer>
+    <p>
+      Data sourced from Environment Agency API | Updated every 90 minutes |
+      <a href="https://twitter.com/yourhandle" target="_blank">Follow on Twitter</a>
+    </p>
+  </footer>
+
+  <script src="feed.js"></script>
+</body>
+</html>
