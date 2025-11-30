@@ -74,7 +74,7 @@ export class CycleGenerator {
       console.log(`✓ Saved cycle data: ${filename}`);
 
       // Generate GitHub Pages URL (will be available after push)
-      const githubUrl = this.githubPublisher.getUrl(`cycles/${filename}.html`);
+      const githubUrl = this.githubPublisher.getUrl(`cycles/${filename}`);
 
       return {
         success: true,
