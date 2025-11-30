@@ -223,12 +223,21 @@ a:hover {
   line-height: 1.8;
 }
 
+/* Event Table Wrapper - Enables horizontal scrolling on mobile */
+.table-wrapper {
+  overflow-x: auto;
+  -webkit-overflow-scrolling: touch;
+  margin-top: 1rem;
+  border-radius: 4px;
+  box-shadow: 0 1px 3px rgba(0,0,0,0.1);
+}
+
 /* Event Table */
 .event-table {
   width: 100%;
   border-collapse: collapse;
-  margin-top: 1rem;
   font-size: 0.9rem;
+  min-width: 800px; /* Ensures table doesn't squish on mobile */
 }
 
 .event-table th {
@@ -237,11 +246,16 @@ a:hover {
   padding: 0.75rem;
   text-align: left;
   font-weight: 600;
+  white-space: nowrap;
+  position: sticky;
+  top: 0;
+  z-index: 10;
 }
 
 .event-table td {
   padding: 0.75rem;
   border-bottom: 1px solid #ddd;
+  white-space: nowrap;
 }
 
 .event-table tr:hover {
@@ -294,26 +308,63 @@ footer a {
     font-size: 1rem;
   }
 
+  .nav-tabs {
+    flex-wrap: wrap;
+  }
+
+  .nav-tab {
+    padding: 0.5rem 1rem;
+    font-size: 0.9rem;
+  }
+
   main {
     padding: 0 0.5rem;
+    margin: 1rem auto;
   }
 
   section {
     padding: 1rem;
+    margin-bottom: 1rem;
+  }
+
+  .cycle-container {
+    padding: 1rem;
   }
 
   .event-table {
-    font-size: 0.8rem;
+    font-size: 0.75rem;
+    min-width: 700px; /* Slightly smaller for mobile but still scrollable */
   }
 
   .event-table th,
   .event-table td {
-    padding: 0.5rem;
+    padding: 0.4rem 0.5rem;
   }
 
   .cycle-header {
     flex-direction: column;
     align-items: flex-start;
     gap: 0.5rem;
+  }
+
+  .cycle-time {
+    font-size: 1rem;
+  }
+
+  .ai-summary {
+    padding: 0.75rem;
+    font-size: 0.9rem;
+  }
+
+  /* Add scroll hint for tables on mobile */
+  .table-wrapper::after {
+    content: "← Scroll to see more →";
+    display: block;
+    text-align: center;
+    padding: 0.5rem;
+    font-size: 0.75rem;
+    color: #999;
+    font-style: italic;
+    background: #f8f9fa;
   }
 }
