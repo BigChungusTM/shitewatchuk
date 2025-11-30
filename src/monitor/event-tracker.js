@@ -205,11 +205,17 @@ export class EventTracker {
             }
           }
 
+          // Try to get site name from mapping data if API doesn't provide it
+          let siteName = parsed.siteName;
+          if (!siteName && historicalData && historicalData.permit_ref) {
+            siteName = `Permit ${historicalData.permit_ref}`;
+          }
+
           const event = {
             id: eventKey, // Unique ID for this event
             waterCompany,
             siteId: parsed.siteId,
-            siteName: parsed.siteName,
+            siteName: siteName,
             latitude: parsed.latitude,
             longitude: parsed.longitude,
             startTime: actualStartTime,
