@@ -136,7 +136,7 @@ export class PostScheduler {
 
       // Generate tweet highlighting worst offenders
       console.log('\\n🐦 Posting to Twitter...');
-      const tweetText = this.generateTweet(events, cycleData.url, cycleData.data.eventCount);
+      const tweetText = this.generateTweet(events, cycleData);
 
       console.log('Tweet preview:');
       console.log('-'.repeat(70));
@@ -179,7 +179,7 @@ export class PostScheduler {
   /**
    * Generate tweet highlighting worst offenders
    */
-  generateTweet(events, githubUrl, eventCount) {
+  generateTweet(events, cycleData) {
     // Get worst offender (longest duration - already sorted)
     const worstEvent = events[0];
     const duration = this.formatDuration(worstEvent.durationMinutes);
@@ -191,14 +191,19 @@ export class PostScheduler {
 
     const hashtags = this.selectHashtags();
 
+    // Link to the feed page (webpage view), not the raw JSON
+    // Extract base URL from cycle URL (e.g., https://bigchungustm.github.io)
+    const baseUrl = cycleData.url.substring(0, cycleData.url.indexOf('/cycles/'));
+    const feedUrl = `${baseUrl}/feed.html`;
+
     // Format: Highlight worst offender, encourage clicking link
     const tweet = `🚨 Latest sewage discharges (90-min cycle)
 
 Worst offender: ${shortCompany}
 Duration: ${duration}
-${eventCount} total events tracked
+${cycleData.data.eventCount} total events tracked
 
-📊 See all data: ${githubUrl}
+📊 See all data: ${feedUrl}
 
 ${hashtags}`;
 
