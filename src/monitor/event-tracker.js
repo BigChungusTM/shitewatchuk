@@ -205,6 +205,7 @@ export class EventTracker {
           }
 
           const event = {
+            id: eventKey, // Unique ID for this event
             waterCompany,
             siteId: parsed.siteId,
             siteName: parsed.siteName,
