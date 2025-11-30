@@ -24,27 +24,32 @@
       <h2>About This Project</h2>
       <p>
         ShitWatch UK monitors real-time storm overflow events across England using data from
-        the <strong>Environment Agency's Event Duration Monitoring (EDM) API</strong>. We track
-        sewage discharges that last <strong>10+ hours</strong> and publish detailed information
-        every 90 minutes.
+        water company APIs. We track <strong>ALL completed sewage discharges</strong> regardless of duration
+        and publish detailed information every 90 minutes, providing complete transparency.
       </p>
 
       <h2>How It Works</h2>
       <ol class="how-it-works">
-        <li><strong>Continuous Monitoring:</strong> We check the EA API every 5 minutes for ongoing discharge events</li>
+        <li><strong>Continuous Monitoring:</strong> We check water company APIs every 1 minute for ongoing discharge events</li>
         <li><strong>Duration Tracking:</strong> Events are tracked from start to finish, with duration calculated in real-time</li>
-        <li><strong>10+ Hour Threshold:</strong> Only significant events (10+ hours) are published</li>
-        <li><strong>90-Minute Cycles:</strong> Every 90 minutes, we publish the latest data and post to Twitter</li>
+        <li><strong>Complete Coverage:</strong> ALL completed events are catalogued - no minimum duration required</li>
+        <li><strong>90-Minute Cycles:</strong> Every 90 minutes, we publish all completed events and post to Twitter</li>
         <li><strong>AI Summaries:</strong> Each cycle includes an AI-generated summary explaining what the data means</li>
+        <li><strong>Worst Offenders Highlighted:</strong> Twitter posts highlight the longest duration events to drive awareness</li>
       </ol>
 
       <h2>Data Sources</h2>
       <ul class="data-sources">
         <li>
-          <strong>Environment Agency Real-Time API:</strong>
-          <a href="https://environment.data.gov.uk/portalstg/home/item.html?id=f286440b8cb24a079c2f7257bbc3e8c3" target="_blank">
-            Storm Overflow Event Data
-          </a>
+          <strong>Water Company APIs:</strong> Real-time data from all 6 major water companies
+          <ul style="margin-top: 0.5rem;">
+            <li>Anglian Water</li>
+            <li>Thames Water</li>
+            <li>United Utilities</li>
+            <li>Yorkshire Water</li>
+            <li>Southern Water</li>
+            <li>Severn Trent Water</li>
+          </ul>
         </li>
         <li>
           <strong>Historical Flow Rates:</strong> Permit database analysis for volume estimates
@@ -103,7 +108,7 @@
   <footer>
     <p>
       Data sourced from Environment Agency API | Updated every 90 minutes |
-      <a href="https://twitter.com/yourhandle" target="_blank">Follow on Twitter</a>
+      <a href="https://twitter.com/ShiteWatchUK" target="_blank">Follow @ShiteWatchUK</a>
     </p>
   </footer>
 </body>

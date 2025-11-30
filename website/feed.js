@@ -137,6 +137,7 @@ function renderEventTable(events) {
           📍 ${event.latitude.toFixed(4)}, ${event.longitude.toFixed(4)}
         </a>
       </td>
+      <td>${formatTime(event.startTime)}</td>
       <td>${formatTime(event.endTime)}</td>
     </tr>
   `).join('');
@@ -151,6 +152,7 @@ function renderEventTable(events) {
           <th>Watercourse</th>
           <th>Duration</th>
           <th>Location</th>
+          <th>Started</th>
           <th>Ended</th>
         </tr>
       </thead>

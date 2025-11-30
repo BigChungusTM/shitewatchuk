@@ -120,7 +120,8 @@ export class EventTracker {
 
     // All companies use these standardized fields
     const siteId = attrs.Id;
-    const siteName = null; // Not provided in the data
+    // Try to get site name from API, fallback to permit name or location name
+    const siteName = attrs.SiteName || attrs.PermitName || attrs.LocationName || attrs.Name || null;
     const status = attrs.Status; // 0 = not discharging, 1 = discharging, -1 = offline/error
     const statusStart = attrs.StatusStart; // When current status started
     const latestEventStart = attrs.LatestEventStart;

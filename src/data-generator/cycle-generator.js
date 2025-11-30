@@ -54,7 +54,7 @@ export class CycleGenerator {
           id: e.id,
           company: e.waterCompany,
           siteId: e.siteId,
-          siteName: e.siteName || e.siteId,
+          siteName: e.siteName || '', // Empty string if no name, don't duplicate site ID
           watercourse: e.receivingWatercourse,
           latitude: e.latitude,
           longitude: e.longitude,
