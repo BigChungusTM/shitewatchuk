@@ -1,8 +1,9 @@
 /**
  * 90-Minute Post Scheduler
  *
- * Posts to Twitter every 90 minutes (16 posts per day)
- * Evenly distributes posts throughout the 24-hour cycle
+ * Posts to Twitter at fixed times every 90 minutes (16 posts per day)
+ * Schedule: 00:00, 01:30, 03:00, 04:30, 06:00, 07:30, 09:00, 10:30,
+ *           12:00, 13:30, 15:00, 16:30, 18:00, 19:30, 21:00, 22:30
  */
 
 export class PostScheduler {
@@ -15,13 +16,53 @@ export class PostScheduler {
     this.intervalMinutes = 90;
     this.intervalMs = this.intervalMinutes * 60 * 1000;
 
+    // Fixed posting times (minutes from midnight)
+    // 00:00, 01:30, 03:00, 04:30, etc.
+    this.postingTimes = [];
+    for (let i = 0; i < 16; i++) {
+      this.postingTimes.push(i * 90); // 0, 90, 180, 270, etc.
+    }
+
     // Track posts
     this.postsToday = 0;
-    this.maxPostsPerDay = 16; // 90min * 16 = 1440 minutes = 24 hours
+    this.maxPostsPerDay = 16;
     this.lastPostDate = null;
 
     this.timer = null;
     this.isRunning = false;
+  }
+
+  /**
+   * Get next scheduled post time
+   */
+  getNextScheduledTime() {
+    const now = new Date();
+    const currentMinutes = now.getHours() * 60 + now.getMinutes();
+
+    // Find next posting time
+    for (const postTime of this.postingTimes) {
+      if (postTime > currentMinutes) {
+        const hours = Math.floor(postTime / 60);
+        const minutes = postTime % 60;
+        const nextTime = new Date(now);
+        nextTime.setHours(hours, minutes, 0, 0);
+        return nextTime;
+      }
+    }
+
+    // If no more posts today, return first post tomorrow
+    const tomorrow = new Date(now);
+    tomorrow.setDate(tomorrow.getDate() + 1);
+    tomorrow.setHours(0, 0, 0, 0);
+    return tomorrow;
+  }
+
+  /**
+   * Calculate ms until next scheduled post
+   */
+  getMsUntilNextPost() {
+    const next = this.getNextScheduledTime();
+    return next.getTime() - Date.now();
   }
 
   /**
@@ -35,20 +76,37 @@ export class PostScheduler {
 
     this.isRunning = true;
     console.log('='.repeat(70));
-    console.log('⏰ POST SCHEDULER STARTED');
+    console.log('⏰ POST SCHEDULER STARTED (Fixed Schedule Mode)');
     console.log('='.repeat(70));
-    console.log(`📅 Posting every ${this.intervalMinutes} minutes`);
-    console.log(`📊 Target: ${this.maxPostsPerDay} posts per day`);
-    console.log(`🕐 Next post: ${this.getNextPostTime()}`);
+    console.log(`📅 Posting at fixed times every ${this.intervalMinutes} minutes`);
+    console.log(`📊 Schedule: 00:00, 01:30, 03:00, 04:30, 06:00, 07:30, 09:00, 10:30,`);
+    console.log(`            12:00, 13:30, 15:00, 16:30, 18:00, 19:30, 21:00, 22:30`);
+    console.log(`🕐 Next post: ${this.getNextScheduledTime().toLocaleTimeString('en-GB')}`);
     console.log('='.repeat(70));
 
-    // Post immediately on start
-    this.processNextPost();
+    // Schedule next post
+    this.scheduleNextPost();
+  }
 
-    // Then schedule regular posts
-    this.timer = setInterval(() => {
-      this.processNextPost();
-    }, this.intervalMs);
+  /**
+   * Schedule the next post at the correct time
+   */
+  scheduleNextPost() {
+    if (this.timer) {
+      clearTimeout(this.timer);
+    }
+
+    const msUntilNext = this.getMsUntilNextPost();
+    const nextTime = this.getNextScheduledTime();
+
+    console.log(`⏰ Next post scheduled for: ${nextTime.toLocaleString('en-GB')}`);
+    console.log(`   (in ${Math.round(msUntilNext / 60000)} minutes)`);
+
+    this.timer = setTimeout(async () => {
+      await this.processNextPost();
+      // Schedule the following post
+      this.scheduleNextPost();
+    }, msUntilNext);
   }
 
   /**
@@ -74,17 +132,6 @@ export class PostScheduler {
       this.lastPostDate = today;
       console.log(`🗓️  New day detected. Counter reset to 0`);
     }
-  }
-
-  /**
-   * Get next post time as human-readable string
-   */
-  getNextPostTime() {
-    const next = new Date(Date.now() + this.intervalMs);
-    return next.toLocaleTimeString('en-GB', {
-      hour: '2-digit',
-      minute: '2-digit'
-    });
   }
 
   /**
@@ -167,7 +214,6 @@ export class PostScheduler {
         console.warn('⚠️  Twitter not configured - skipping post');
       }
 
-      console.log(`\\n🕐 Next cycle: ${this.getNextPostTime()}`);
       console.log('='.repeat(70));
 
     } catch (error) {
@@ -276,7 +322,8 @@ ${hashtags}`;
       postsToday: this.postsToday,
       maxPosts: this.maxPostsPerDay,
       intervalMinutes: this.intervalMinutes,
-      nextPost: this.getNextPostTime()
+      nextPost: this.getNextScheduledTime().toLocaleTimeString('en-GB'),
+      schedule: '00:00, 01:30, 03:00, 04:30, 06:00, 07:30, 09:00, 10:30, 12:00, 13:30, 15:00, 16:30, 18:00, 19:30, 21:00, 22:30'
     };
   }
 }
